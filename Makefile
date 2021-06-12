@@ -9,7 +9,7 @@ INSTALL_TARGET_PROCESSES = SpringBoard
 
 TWEAK_NAME = MilkyWay2iOS14Fix
 
-MilkyWay2iOS14Fix_FILES = Tweak.xm
+MilkyWay2iOS14Fix_FILES = Tweak.xm 3DTouch.x
 MilkyWay2iOS14Fix_CFLAGS = -fobjc-arc
 
 ADDITIONAL_CFLAGS += -Wno-error=unused-variable -Wno-error=unused-function -include Prefix.pch
