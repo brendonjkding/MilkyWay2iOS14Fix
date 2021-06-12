@@ -18,6 +18,12 @@ static AXPassthroughWindow *keyboardWindow;
 @end
 
 @interface SBAppLayout : NSObject
++(id)homeScreenAppLayout;
+@end
+
+@interface SBMainSwitcherViewController : UIViewController
++(id)sharedInstance;
+-(BOOL)_dismissSwitcherNoninteractivelyToAppLayout:(SBAppLayout*)arg1 dismissFloatingSwitcher:(BOOL)arg2 animated:(BOOL)arg3 ;
 @end
 
 %group iOS14
@@ -47,6 +53,13 @@ static AXPassthroughWindow *keyboardWindow;
     }
 }
 %end //AXWindowView
+
+%hook SBAppSwitcherPageView
+-(void)AXlongPressAction:(UIGestureRecognizer*)gestureRecognizer{
+    %orig;
+    [[%c(SBMainSwitcherViewController) sharedInstance] _dismissSwitcherNoninteractivelyToAppLayout:[%c(SBAppLayout) homeScreenAppLayout] dismissFloatingSwitcher:YES animated:YES];
+}
+%end //SBAppSwitcherPageView
 %end //iOS14
 
 
