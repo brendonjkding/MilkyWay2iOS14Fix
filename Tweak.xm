@@ -49,6 +49,7 @@ static AXPassthroughWindow *keyboardWindow;
                 [subview removeFromSuperview];
             }
             [keyboardWindow addSubview:hostView];
+            [hostView setClipsToBounds:NO];
         }
     }
 }
