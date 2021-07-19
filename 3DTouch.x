@@ -15,6 +15,19 @@ static dispatch_source_t _timer;
 - (id)initWithScene:(id)arg1;
 @end
 
+@interface SBAppLayout : NSObject
+- (id)initWithItemsForLayoutRoles:(id)arg1 configuration:(long long)arg2 environment:(long long)arg3;
+@end
+
+@interface SBDisplayItem : NSObject
++ (id)displayItemWithType:(long long)arg1 bundleIdentifier:(id)arg2 uniqueIdentifier:(id)arg3;
+@end
+
+@interface SBMainSwitcherViewController : UIViewController
++(id)sharedInstance;
+- (void)_addAppLayoutToFront:(id)arg1;
+@end
+
 %hook SBIconView
 // credits to https://github.com/opa334/Choicy/blob/master/ChoicySB/TweakSB.x#L171
 - (NSArray *)applicationShortcutItems
@@ -75,6 +88,14 @@ static dispatch_source_t _timer;
 
             [(AXPassthroughWindow*)[%c(AXPassthroughWindow) sharedInstance] addSubview:windowView];
             [%c(AXPassthroughWindow) notifyUpdateLayers];
+
+            SBDisplayItem *displayItem = [%c(SBDisplayItem) displayItemWithType:0 bundleIdentifier:bundleID uniqueIdentifier:sceneId];
+            NSMutableDictionary *roles = [NSMutableDictionary new];
+            roles[@1] = displayItem;
+            SBAppLayout *appLayout = [[%c(SBAppLayout) alloc] initWithItemsForLayoutRoles:roles configuration:1 environment:1];
+
+            if(!bundleID || !sceneId || !displayItem || !roles || !appLayout) return;
+            [[%c(SBMainSwitcherViewController) sharedInstance] _addAppLayoutToFront:appLayout];
 
             
         });
