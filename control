@@ -3,7 +3,9 @@ Name: MilkyWay2-iOS14Fix
 Depends: mobilesubstrate
 Version: 0.0.2
 Architecture: iphoneos-arm
-Description: An awesome MobileSubstrate tweak!
+Description: Make MilkyWay2 great again!
 Maintainer: Brend0n <brendonjkding@126.com>
 Author: Brend0n <brendonjkding@126.com>
 Section: Tweaks
+Depiction: http://brendonjkding.github.io/depictions/web/?p=com.brend0n.milkyway2-ios14fix
+SileoDepiction: http://brendonjkding.github.io/depictions/web/com.brend0n.milkyway2-ios14fix/depiction.json
