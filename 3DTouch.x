@@ -1,4 +1,6 @@
 #import <SpringBoard/SpringBoard.h>
+#import <SpringBoard/SBApplicationController.h>
+#import <SpringBoard/SBApplication.h>
 #import <SpringBoardServices/SBSApplicationShortcutItem.h>
 #import "MilkyWay2.h"
 
@@ -69,6 +71,7 @@ static dispatch_source_t _timer;
             [%c(AXFlexHelper) wakeUpScene:bundleID];
             _UISceneLayerHostContainerView *contentView = [[%c(_UISceneLayerHostContainerView) alloc] initWithScene:scene];
             AXWindowView *windowView = [[%c(AXWindowView) alloc] initWithContentView:contentView identifier:bundleID scene:scene];
+            [[windowView titleLabel] setText:[[[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:bundleID] displayName]];
 
             [(AXPassthroughWindow*)[%c(AXPassthroughWindow) sharedInstance] addSubview:windowView];
             [%c(AXPassthroughWindow) notifyUpdateLayers];

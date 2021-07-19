@@ -9,6 +9,7 @@
 @interface AXWindowView : UIView
 @property(retain, nonatomic) UIView *contentView; // @synthesize contentView=_contentView;
 - (instancetype)initWithContentView:(id)arg1 identifier:(id)arg2 scene:(id)arg3;
+@property(retain, nonatomic) UILabel *titleLabel; // @synthesize titleLabel=_titleLabel;
 @end
 
 @interface AXPassthroughWindow : UIWindow
