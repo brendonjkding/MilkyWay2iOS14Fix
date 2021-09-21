@@ -3,6 +3,7 @@
 #import <SpringBoard/SBApplication.h>
 #import <SpringBoardServices/SBSApplicationShortcutItem.h>
 #import "MilkyWay2.h"
+#import "_UISceneLayerHostContainerView.h"
 
 @interface SBIconView : UIView
 - (NSString*)applicationBundleIdentifier;
@@ -10,10 +11,6 @@
 @end
 
 static dispatch_source_t _timer;
-
-@interface _UISceneLayerHostContainerView : UIView
-- (id)initWithScene:(id)arg1;
-@end
 
 %hook SBIconView
 // credits to https://github.com/opa334/Choicy/blob/master/ChoicySB/TweakSB.x#L171

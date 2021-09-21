@@ -6,6 +6,7 @@
 #import <mach-o/dyld.h>
 
 #import "MilkyWay2.h"
+#import "_UISceneLayerHostContainerView.h"
 
 static AXPassthroughWindow *keyboardWindow;
 
@@ -53,6 +54,12 @@ static AXPassthroughWindow *keyboardWindow;
         }
     }
 }
+- (void)closeButtonAction:(id)arg1{
+    if([[self contentView] respondsToSelector:@selector(invalidate)]){
+        [(_UISceneLayerHostContainerView*)[self contentView] invalidate];
+    }
+    %orig;
+}
 %end //AXWindowView
 
 %hook SBAppSwitcherPageView
@@ -90,6 +97,14 @@ static AXPassthroughWindow *keyboardWindow;
     [scene updateSettings:mutableSetting withTransitionContext:nil];
 }
 %end //AXFlexHelper
+
+%hook _UISceneLayerHostContainerView
+%new
+-(instancetype)initWithScene:(id)arg1{
+    return [self initWithScene:arg1 debugDescription:@""];
+}
+%end //_UISceneLayerHostContainerView
+
 %end //iOS 15
 
 %ctor{
