@@ -117,7 +117,7 @@ static AXPassthroughWindow *keyboardWindow;
     #if TARGET_OS_SIMULATOR
     dlopen("/opt/simject/MilkyWay2.dylib", RTLD_NOW);
     #else
-    dlopen("/Library/MobileSubstrate/DynamicLibraries/MilkyWay2.dylib", RTLD_NOW);
+    dlopen(THEOS_PACKAGE_INSTALL_PREFIX"/Library/MobileSubstrate/DynamicLibraries/MilkyWay2.dylib", RTLD_NOW);
     #endif
 
     if(@available(iOS 15, *)){
