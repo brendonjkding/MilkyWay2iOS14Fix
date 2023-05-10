@@ -1,7 +1,7 @@
 Package: com.brend0n.milkyway2-ios14fix
 Name: MilkyWay2-iOS14Fix
 Depends: mobilesubstrate
-Version: 0.0.3
+Version: 0.0.3.1
 Architecture: iphoneos-arm
 Description: Make MilkyWay2 great again!
 Maintainer: Brend0n <brendonjkding@126.com>
