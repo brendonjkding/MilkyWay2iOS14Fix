@@ -4,6 +4,7 @@
 #import <FrontBoard/FBScene.h>
 #import <FrontBoard/FBSceneManager.h>
 #import <mach-o/dyld.h>
+#import <rootless.h>
 
 #import "MilkyWay2.h"
 #import "_UISceneLayerHostContainerView.h"
@@ -128,5 +129,12 @@ static AXPassthroughWindow *keyboardWindow;
     }
     if(@available(iOS 13, *)){
         %init(iOS13);
+    }
+
+    NSString *prefsPath = @"/var/mobile/Library/Preferences/jp.akusio.milkywaythemedefault.plist";
+    if(![[NSFileManager defaultManager] fileExistsAtPath:prefsPath]){
+        [[NSFileManager defaultManager] copyItemAtPath:ROOT_PATH_NS_VAR(prefsPath) toPath:prefsPath error:nil];
+        [%c(AXWindowView) initialize];
+        [[NSFileManager defaultManager] removeItemAtPath:prefsPath error:nil];
     }
 }
