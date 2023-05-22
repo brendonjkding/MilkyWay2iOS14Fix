@@ -28,11 +28,16 @@ static AXPassthroughWindow *keyboardWindow;
 -(BOOL)_dismissSwitcherNoninteractivelyToAppLayout:(SBAppLayout*)arg1 dismissFloatingSwitcher:(BOOL)arg2 animated:(BOOL)arg3 ;
 @end
 
+@interface SBAppSwitcherSettings
+- (long)effectiveSwitcherStyle;
+@end
+
 %group iOS13
 %hook SBAppSwitcherPageView
 -(void)AXlongPressAction:(UIGestureRecognizer*)gestureRecognizer{
     %orig;
-    if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone){
+    if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone
+        || [MSHookIvar<SBAppSwitcherSettings *>([%c(SBMainSwitcherViewController) sharedInstance], "_settings") effectiveSwitcherStyle] == 1){
         [[%c(SBMainSwitcherViewController) sharedInstance] _dismissSwitcherNoninteractivelyToAppLayout:[%c(SBAppLayout) homeScreenAppLayout] dismissFloatingSwitcher:YES animated:YES];
     }
 }
