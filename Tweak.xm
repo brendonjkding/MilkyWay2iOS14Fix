@@ -21,6 +21,7 @@ static AXPassthroughWindow *keyboardWindow;
 
 @interface SBAppLayout : NSObject
 +(id)homeScreenAppLayout;
+- (id)allItems;
 @end
 
 @interface SBMainSwitcherViewController : UIViewController
@@ -32,13 +33,23 @@ static AXPassthroughWindow *keyboardWindow;
 - (long)effectiveSwitcherStyle;
 @end
 
+@interface SBDisplayItem : NSObject
+@property(readonly, copy, nonatomic) NSString *uniqueIdentifier; // @synthesize uniqueIdentifier=_uniqueIdentifier;
+@property(readonly, copy, nonatomic) NSString *bundleIdentifier; // @synthesize bundleIdentifier=_bundleIdentifier;
+@end
+
+@interface SpringBoard
+- (id)embeddedDisplayWindowScene;
+@end
+
 %group iOS13
 %hook SBAppSwitcherPageView
 -(void)AXlongPressAction:(UIGestureRecognizer*)gestureRecognizer{
     %orig;
+    Class SBMainSwitcherClass = %c(SBMainSwitcherViewController) ?: %c(SBMainSwitcherControllerCoordinator);
     if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone
-        || [MSHookIvar<SBAppSwitcherSettings *>([%c(SBMainSwitcherViewController) sharedInstance], "_settings") effectiveSwitcherStyle] == 1){
-        [[%c(SBMainSwitcherViewController) sharedInstance] _dismissSwitcherNoninteractivelyToAppLayout:[%c(SBAppLayout) homeScreenAppLayout] dismissFloatingSwitcher:YES animated:YES];
+        || [MSHookIvar<SBAppSwitcherSettings *>([SBMainSwitcherClass sharedInstance], "_settings") effectiveSwitcherStyle] == 1){
+        [[SBMainSwitcherClass sharedInstance] _dismissSwitcherNoninteractivelyToAppLayout:[%c(SBAppLayout) homeScreenAppLayout] dismissFloatingSwitcher:YES animated:YES];
     }
 }
 %end //SBAppSwitcherPageView
@@ -117,6 +128,27 @@ static AXPassthroughWindow *keyboardWindow;
 
 %end //iOS 15
 
+%group iOS16
+%hook SBAppLayout
+-(id)AXbundleIdentifier{
+    return [[[self allItems] firstObject] bundleIdentifier];
+}
+-(id)AXgetSceneIdentifier{
+    return [[[self allItems] firstObject] uniqueIdentifier];
+}
+%end //SBAppLayout
+
+%hook AXPassthroughWindow
+- (instancetype)initWithFrame:(CGRect)frame{
+    AXPassthroughWindow *window = %orig;
+    if(@available(iOS 16, *)){
+        window.windowScene = [(SpringBoard *)[UIApplication sharedApplication] embeddedDisplayWindowScene];
+    }
+    return window;
+}
+%end //AXPassthroughWindow
+%end //iOS16
+
 %ctor{
     NSLog(@"ctor: MilkyWay2iOS14Fix");
 
@@ -126,6 +158,9 @@ static AXPassthroughWindow *keyboardWindow;
     dlopen(THEOS_PACKAGE_INSTALL_PREFIX"/Library/MobileSubstrate/DynamicLibraries/MilkyWay2.dylib", RTLD_NOW);
     #endif
 
+    if(@available(iOS 16, *)){
+        %init(iOS16);
+    }
     if(@available(iOS 15, *)){
         %init(iOS15);
     }
